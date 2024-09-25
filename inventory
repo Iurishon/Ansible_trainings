@@ -1,3 +1,8 @@
-35.158.98.163
-3.75.130.155
-3.77.154.121
+[aws_servers]
+ec2-35-158-98-163.eu-central-1.compute.amazonaws.com
+
+[justhost]
+45.147.200.152
+
+[localhost]
+192.168.0.102
