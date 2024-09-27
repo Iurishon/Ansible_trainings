@@ -1,0 +1,42 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: update Linux
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Debian"
+
+  - name: install apache & php packages
+    tags: always
+    apt:
+      name:
+       - "{{ apache_package  }}"
+       - "{{ php_package }}"
+      state: latest
+      update_cache: yes
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install MariaDB package
+    tags: maria,db
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Debian"
+
+- hosts: justhost
+  become: true
+  tasks:
+
+  - name: install samba
+    tags: samba
+    package:
+      name: samba
+      state: latest

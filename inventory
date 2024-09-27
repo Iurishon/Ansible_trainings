@@ -1,5 +1,5 @@
 [justhost]
-45.147.200.152
+45.147.200.152 apache_package=apache2 php_package=libapache2-mod-php
 
 [localhost]
-192.168.0.102
+192.168.0.102 apache_package=apache2 php_package=libapache2-mod-php
