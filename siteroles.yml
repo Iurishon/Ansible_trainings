@@ -1,0 +1,11 @@
+---
+
+- hosts: all
+  become: true
+  roles:
+    - allrole
+
+- hosts: justhost
+  become: true
+  roles:
+    - justhostrole

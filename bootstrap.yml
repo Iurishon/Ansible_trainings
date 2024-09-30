@@ -1,0 +1,31 @@
+---
+
+- hosts: justhost
+  become: true
+  tasks:
+
+  - name: update Linux
+    tags: always
+    apt:
+      upgrade: dist
+    when: ansible_distribution == "Debian"
+
+  - name: create testuser
+    tags: adduser
+    user:
+      name: testuser
+      groups: iurii
+
+  - name: add key for testuser
+    authorized_key:
+      user: testuser
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMSwQvlhSIsZEtlpwNnXaURP6j5XIXQn2mSWVUwCU0w2 ansible"
+
+  - name: add testuser to sudoers
+    tags: sudoers
+    copy:
+      src: sudoers_testuser
+      dest: /etc/sudoers.d/testuser
+      owner: testuser
+      group: iurii
+      mode: 0440

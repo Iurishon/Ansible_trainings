@@ -7,8 +7,8 @@
   - name: update Linux
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Debian"
 
   - name: install apache & php packages
@@ -19,7 +19,14 @@
       state: latest
       update_cache: yes
 
-- hosts: all
+  - name: change email address by regexp
+    lineinfile:
+      path: /etc/apache2/apache2.conf
+      regexp: '^ServerAdmin'
+      line: ServerAdmin iurii@iurii.con
+    register: testvariable
+
+- hosts: justhost
   become: true
   tasks:
 
@@ -38,7 +45,8 @@
     package:
       name: samba
       state: latest
-  - name: capy HTML website
+
+  - name: copy HTML website
     tags: site
     copy:
       src: default_site.html
@@ -60,3 +68,34 @@
       owner: root
       group: root
       mode: 0755
+
+  - name: create testuser
+    tags: adduser
+    user:
+      name: testuser
+      groups: iurii
+
+  - name: add key for testuser
+    authorized_key:
+      user: testuser
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMSwQvlhSIsZEtlpwNnXaURP6j5XIXQn2mSWVUwCU0w2 ansible"
+
+  - name: add testuser to sudoers
+    tags: sudoers
+    copy:
+      src: sudoers_testuser
+      dest: /etc/sudoers.d/testuser
+      owner: testuser
+      group: iurii
+      mode: 0440
+
+
+- hosts: all
+  become: true
+  roles:
+    - allrole
+
+- hosts: justhost
+  become: true
+  roles:
+    - justhostrole
